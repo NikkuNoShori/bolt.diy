@@ -35,6 +35,20 @@ export default defineConfig((config) => {
         },
       },
     },
+    server: {
+      proxy: {
+        '/ollama/api': {
+          target: 'http://localhost:11434',
+          changeOrigin: true,
+          rewrite: (path) => path.replace(/^\/ollama/, ''),
+        },
+        '/lmstudio/v1': {
+          target: 'http://localhost:1234',
+          changeOrigin: true,
+          rewrite: (path) => path.replace(/^\/lmstudio/, ''),
+        }
+      }
+    },
   };
 });
 

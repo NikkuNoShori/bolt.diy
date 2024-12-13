@@ -375,7 +375,9 @@ const getOllamaBaseUrl = (settings?: IProviderSetting) => {
 
 async function getOllamaModels(apiKeys?: Record<string, string>, settings?: IProviderSetting): Promise<ModelInfo[]> {
   try {
-    const baseUrl = getOllamaBaseUrl(settings);
+    const baseUrl = typeof window !== 'undefined' 
+      ? `${window.location.protocol}//${window.location.host}/ollama`
+      : getOllamaBaseUrl(settings);
     const response = await fetch(`${baseUrl}/api/tags`);
     const data = (await response.json()) as OllamaApiResponse;
 
@@ -462,9 +464,10 @@ async function getOpenRouterModels(): Promise<ModelInfo[]> {
 }
 
 async function getLMStudioModels(_apiKeys?: Record<string, string>, settings?: IProviderSetting): Promise<ModelInfo[]> {
-
   try {
-    const baseUrl = settings?.baseUrl || import.meta.env.LMSTUDIO_API_BASE_URL || 'http://localhost:1234';
+    const baseUrl = typeof window !== 'undefined'
+      ? `${window.location.protocol}//${window.location.host}/lmstudio`
+      : (settings?.baseUrl || import.meta.env.LMSTUDIO_API_BASE_URL || 'http://localhost:1234');
     const response = await fetch(`${baseUrl}/v1/models`);
     const data = (await response.json()) as any;
 
